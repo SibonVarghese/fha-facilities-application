@@ -55,4 +55,4 @@ jobs:
           app-name: 'DevFHA'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E588BE15A8884ECBA2EC9024FF052ADE }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_88AB966723564DC4AFA864D9DE0F855E }}
