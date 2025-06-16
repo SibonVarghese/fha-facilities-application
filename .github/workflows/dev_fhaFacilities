@@ -1,0 +1,55 @@
+name: Build and Deploy ASP.NET Core app to Azure Web App - DevFHA
+
+on:
+  push:
+    branches:
+      - test   # Trigger deployment on pushes to the 'test' branch
+  workflow_dispatch:  # Allows manual trigger from GitHub UI
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Build the project
+        run: dotnet build --configuration Release
+
+      - name: Publish the project
+        run: dotnet publish -c Release -o ${{ env.DOTNET_ROOT }}/myapp
+
+      - name: Upload artifact for deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: .net-app
+          path: ${{ env.DOTNET_ROOT }}/myapp
+
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'Development'
+      url: https://devfha-gkh4hchuhph8h3df.canadacentral-01.azurewebsites.net
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: dotnet-app
+
+      - name: Deploy to Azure Web App (DevFHA)
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'DevFHA'
+          slot-name: 'Development'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_DEVFHA_PUBLISH_PROFILE }}
+          package: .
