@@ -25,7 +25,7 @@ namespace FhaFacilitiesApplication.Controllers
         /// <summary>
         /// Retrieves the list of campuses and returns the view with the campus list as the model.
         /// </summary>
-        /// <returns>A View with the list of campuses.</returns>
+        /// <returns>A View with the list of campuses..</returns>
         public async Task<IActionResult> GetCampus()
         {
             var campuses = await _campusService.GetCampusListAsync();
